@@ -1,6 +1,6 @@
 <script lang="ts">
     import {countries, currentCountryIndex} from "$lib/stores";
-    import {countryGuessed, getNuwCurrentCountry} from "./dataLoad";
+    import {getNuwCurrentCountry} from "./dataLoad";
 
     let input;
 
@@ -14,20 +14,21 @@
                 .includes(str))
         {
             console.log(str)
-            countryGuessed();
             $currentCountryIndex = getNuwCurrentCountry();
             e.target.value = "";
         }
     }
     function skip(){
-        countryGuessed();
+        $countries.splice($currentCountryIndex, 1);
+        localStorage.setItem("countries",JSON.stringify($countries));
         $currentCountryIndex = getNuwCurrentCountry();
+        console.log($countries[$currentCountryIndex].name.common + " " + $countries.length);
         input.value = "";
     }
 </script>
 
 <div>
-    <img src={currentCountry.flags.png} alt="flag"/>
+    <img src={currentCountry.flags.svg} alt="flag"/>
     <input bind:this={input} type="text" on:input={onInputHandle}/>
     <button on:click={skip}>skip</button>
 </div>

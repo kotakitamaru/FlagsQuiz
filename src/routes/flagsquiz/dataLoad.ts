@@ -34,18 +34,6 @@ export function loadCurrentCountry(){
     return curr;
 }
 
-export function countryGuessed(){
-    let ctrs : Country[] = [];
-    let currI = -1;
-    countries.subscribe( (value)=>{
-        ctrs = value;
-    })
-    currentCountryIndex.subscribe((val) =>{
-        currI = val;
-    })
-    delete ctrs[currI];
-}
-
 export function getNuwCurrentCountry(){
     let maxVal:number = 0;
     countries.subscribe((value)=>{
