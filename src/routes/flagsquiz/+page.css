@@ -1,0 +1,25 @@
+body{
+    margin: 0;
+}
+
+.gamePage{
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.gameWindow{
+    width: 50vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flagImg{
+    border: 1px red solid;
+    object-fit: contain;
+    width: 50vw;
+    height: 50vh;
+}

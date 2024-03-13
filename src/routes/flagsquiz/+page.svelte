@@ -1,34 +1,39 @@
 <script lang="ts">
-    import {countries, currentCountryIndex} from "$lib/stores";
-    import {getNuwCurrentCountry} from "./dataLoad";
+    import "./+page.css"
+    import {initializeCountries} from "./dataLoad.js";
+    import GameWindow from "./GameWindow.svelte";
 
-    let input;
+    let isGameStarted = false;
+    let countries : Country[]= [];
+    let currentCountryIndex : number = 0;
 
-    $: currentCountry = $countries[$currentCountryIndex]
-    function onInputHandle(e){
-        const str = e.target.value.toLowerCase();
-        if(str == currentCountry.name.common.toLowerCase()
-            || currentCountry.altSpellings
-                .slice(1,-1)
-                .map(x => x.toLowerCase())
-                .includes(str))
-        {
-            console.log(str)
-            $currentCountryIndex = getNuwCurrentCountry();
-            e.target.value = "";
-        }
-    }
-    function skip(){
-        $countries.splice($currentCountryIndex, 1);
-        localStorage.setItem("countries",JSON.stringify($countries));
-        $currentCountryIndex = getNuwCurrentCountry();
-        console.log($countries[$currentCountryIndex].name.common + " " + $countries.length);
-        input.value = "";
+    let isUnMember = false;
+    let isIndependent = false;
+
+    async function startGame(){
+        isGameStarted = true;
+        [countries, currentCountryIndex] = await initializeCountries(isUnMember,isIndependent);
     }
 </script>
 
-<div>
-    <img src={currentCountry.flags.svg} alt="flag"/>
-    <input bind:this={input} type="text" on:input={onInputHandle}/>
-    <button on:click={skip}>skip</button>
+<div class="gamePage">
+    {#if isGameStarted}
+        {#await startGame()}
+            <h1>loading...</h1>
+        {:then number}
+            <GameWindow {countries} {currentCountryIndex}/>
+        {/await}
+
+    {:else}
+        <label>
+            UN Member
+            <input type="checkbox" bind:checked={isUnMember}/>
+        </label>
+
+        <label>
+            Independent
+            <input type="checkbox" bind:checked="{isIndependent}"/>
+        </label>
+        <button on:click={startGame}>Start</button>
+    {/if}
 </div>

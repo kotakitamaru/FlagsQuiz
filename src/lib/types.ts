@@ -4,11 +4,16 @@ interface Country{
     altSpellings : string[],
     unMember : boolean,
     independent : boolean,
-    flags : object,
+    flags : Flags,
 }
 
 interface Name{
     common : string,
     official : string,
+}
+
+interface Flags{
+    svg : string,
+    png : string,
 }
 
