@@ -1,29 +1,28 @@
 <script lang="ts">
-    import "./+page.css"
-    import {initializeCountries} from "./dataLoad.js";
+    import "./+page.css";
+    import { initializeCountries } from "./dataLoad";
     import GameWindow from "./GameWindow.svelte";
+    import type { Country } from "$lib/types";
 
-    let isGameStarted = false;
-    let countries : Country[]= [];
-    let currentCountryIndex : number = 0;
+    let isUnMember = $state(false);
+    let isIndependent = $state(false);
+    let isGameStarted = $state(false);
 
-    let isUnMember = false;
-    let isIndependent = false;
+    let loadPromise = $state<Promise<[Country[], number]> | null>(null);
 
-    async function startGame(){
+    function startGame() {
+        loadPromise = initializeCountries(isUnMember, isIndependent);
         isGameStarted = true;
-        [countries, currentCountryIndex] = await initializeCountries(isUnMember,isIndependent);
     }
 </script>
 
 <div class="gamePage">
     {#if isGameStarted}
-        {#await startGame()}
+        {#await loadPromise!}
             <h1>loading...</h1>
-        {:then number}
-            <GameWindow {countries} {currentCountryIndex}/>
+        {:then result}
+            <GameWindow initialCountries={result[0]} initialIndex={result[1]} />
         {/await}
-
     {:else}
         <label>
             UN Member
@@ -32,8 +31,8 @@
 
         <label>
             Independent
-            <input type="checkbox" bind:checked="{isIndependent}"/>
+            <input type="checkbox" bind:checked={isIndependent}/>
         </label>
-        <button on:click={startGame}>Start</button>
+        <button onclick={startGame}>Start</button>
     {/if}
 </div>

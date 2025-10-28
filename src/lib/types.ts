@@ -1,4 +1,4 @@
-interface Country{
+export interface Country{
     name: Name,
     region : string,
     altSpellings : string[],
@@ -7,12 +7,12 @@ interface Country{
     flags : Flags,
 }
 
-interface Name{
+export interface Name{
     common : string,
     official : string,
 }
 
-interface Flags{
+export interface Flags{
     svg : string,
     png : string,
 }

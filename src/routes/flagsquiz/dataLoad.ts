@@ -1,10 +1,11 @@
-let countries : Country[];
+import type { Country } from "$lib/types";
 
-export async function initializeCountries(isUnMember = false, isIndependent = false){
-    let maxVal: number = -1;
+let countries: Country[] = [];
+
+export async function initializeCountries(isUnMember = false, isIndependent = false): Promise<[Country[], number]> {
     countries = await fetch("https://restcountries.com/v3.1/all?fields=name,region,flags,altSpellings,unMember,independent")
-        .then(res => res.json())
-        .then(data => {
+        .then(res => res.json() as Promise<Country[]>)
+        .then((data: Country[]) => {
             return data;
         })
 
